@@ -6,6 +6,8 @@ const listEndpoints = require("express-list-endpoints");
 
 const thoughtsRouter = require("./routes/thoughtsRoute");
 
+const userRouter = require("./routes/userRoutes");
+
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -16,16 +18,18 @@ mongoose
   .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((res) => console.log("connected"));
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8700;
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
 app.use("/api/v1", thoughtsRouter);
+app.use("/api/v1/user", userRouter);
 app.get("/", (req, res) => {
   res.json(listEndpoints(app));
 });
+
 app.all("*", (req, res, next) => {
   res.status(501).json({ status: "fail", message: "Not Implemented Endpoint 💥 " });
   next();
